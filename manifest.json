@@ -1,0 +1,21 @@
+{
+	"app": {
+		"background": {
+			"scripts": ["js/background.js"]
+		}
+	},
+	"manifest_version": 2,
+	"name": "LoRa Serial Host",
+	"version": "0.1",
+
+	"description": "Communicate with LoRa device over serial port",
+	"icons": {
+		"16": "icon16.png",
+		"48": "icon48.png",
+		"128": "icon128.png"
+	},
+
+	"permissions": [
+		"serial"
+	]
+}
