@@ -13,10 +13,12 @@ loraserialhostApp.controller("MainCtrl", function ($scope) {
 
 	$scope.refreshPorts = function() {
 		chrome.serial.getDevices(function (devices) {
-			$scope.ports = [];
-			for (var i = 0; i < devices.length; i++) {
-				$scope.ports.push(devices[i].path);
-			}
+			$scope.$apply(function () {
+				$scope.ports = [];
+				for (var i = 0; i < devices.length; i++) {
+					$scope.ports.push(devices[i].path);
+				}
+			});
 		});
 	};
 	$scope.refreshPorts();
@@ -28,27 +30,35 @@ loraserialhostApp.controller("MainCtrl", function ($scope) {
 			receiveTimeout: 5000,
 			sendTimeout: 1000
 		}, function(info) {
-			$scope.connectionId = info.connectionId;
+			$scope.$apply(function () {
+				$scope.connectionId = info.connectionId;
+			});
 		});
 		$scope.log = "Connected to " + $scope.usePort + "\n";
 		$scope.disconnectStyle = {
 			"display": "block"
 		};
 
+		var decoder = new TextDecoder();
 		chrome.serial.onReceive.addListener(function (info) {
-			var decoder = new TextDecoder();
-			$scope.log += decoder.decode(info.data);
+			$scope.$apply(function() {
+				$scope.log += decoder.decode(info.data);
+			});
 		});
 	};
 
 	$scope.disconnect = function() {
 		chrome.serial.disconnect($scope.connectionId, function(result) {
-			if (result === true) {
-				$scope.log += "Disconnected";
-			}
+			$scope.$apply(function () {
+				if (result === true) {
+					$scope.log += "Disconnected";
+					$scope.disconnectStyle = {
+						"display": "none"
+					};
+				} else {
+					$scope.log += "Error disconnecting";
+				}
+			});
 		});
-		$scope.disconnectStyle = {
-			"display": "none"
-		};
 	};
 });
