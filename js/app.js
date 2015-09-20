@@ -7,6 +7,7 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		"display": "none"
 	};
 	var decoder = new TextDecoder();
+	var logArea = document.getElementById("log-area");
 
 	$scope.closeApp = function() {
 		window.close();
@@ -27,6 +28,7 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	var readPort = function(info) {
 		$scope.$apply(function() {
 			$scope.log += decoder.decode(info.data);
+			logArea.scrollTop = logArea.scrollHeight;
 		});
 	};
 
@@ -54,7 +56,7 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		chrome.serial.disconnect($scope.connectionId, function(result) {
 			$scope.$apply(function() {
 				if (result === true) {
-					$scope.log += "Disconnected";
+					$scope.log += "\nDisconnected";
 					$scope.disconnectStyle = {
 						"display": "none"
 					};
