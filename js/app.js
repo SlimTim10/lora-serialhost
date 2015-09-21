@@ -30,20 +30,26 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	};
 	$scope.refreshPorts();
 
-	var visibleConnectBtns = function() {
+	var hideConnectBtns = function() {
 		$scope.ports.forEach(function(item, index) {
-			if (item.active === true) {
-				$scope.ports[index].hidden = false;
-			} else {
-				$scope.ports[index].hidden = true;
-			}
+			$scope.ports[index].hidden = true;
 		});
+	};
+
+	var showConnectBtns = function() {
+		$scope.ports.forEach(function(item, index) {
+			$scope.ports[index].hidden = false;
+		});
+	};
+
+	var scrollLog = function() {
+		logArea.scrollTop = logArea.scrollHeight;
 	};
 
 	var readPort = function(info) {
 		$scope.$apply(function() {
 			$scope.log += decoder.decode(info.data);
-			logArea.scrollTop = logArea.scrollHeight;
+			scrollLog();
 		});
 	};
 
@@ -60,28 +66,25 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 			});
 		});
 		$scope.log = "Connected to " + $scope.portName + "\n\n";
-		$scope.disconnectStyle = {
-			"display": "block"
-		};
 
 		port.active = true;
-		visibleConnectBtns();
+		hideConnectBtns();
 
 		// Start reading data from port
 		chrome.serial.onReceive.addListener(readPort);
 	};
 
-	$scope.disconnect = function() {
+	$scope.disconnect = function(port) {
 		chrome.serial.disconnect($scope.connectionId, function(result) {
 			$scope.$apply(function() {
 				if (result === true) {
 					$scope.log += "\nDisconnected";
-					$scope.disconnectStyle = {
-						"display": "none"
-					};
+					port.active = false;
+					showConnectBtns();
 				} else {
 					$scope.log += "Error disconnecting";
 				}
+				scrollLog();
 			});
 		});
 	};
