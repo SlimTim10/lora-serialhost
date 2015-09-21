@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app="loraserialhostApp">
+<html data-ng-app="loraserialhostApp">
   <head>
 	<title>LoRa Serial Host</title>
 	<link rel="stylesheet" media="all" href="css/bootstrap.css">
@@ -7,20 +7,20 @@
 	<script src="js/angular.min.js"></script>
 	<script src="js/app.js"></script>
   </head>
-  <body ng-controller="MainCtrl">
-	<button class="btn btn-default pull-right" title="Close" ng-click="closeApp()">x</button>
+  <body data-ng-controller="MainCtrl">
+	<button class="btn btn-default pull-right" title="Close" data-ng-click="closeApp()">x</button>
 	<h4>{{title}}</h4>
 	<div class="panel panel-default">
 	  <div class="panel-heading clearfix">
 		<h3 class="panel-title pull-left" id="ports-header">Ports</h3>
-		<button class="btn btn-primary btn-sm pull-right" ng-click="refreshPorts()">Refresh</button>
+		<button class="btn btn-primary btn-sm pull-right" data-ng-click="refreshPorts()">Refresh</button>
 	  </div>
 	  <div class="panel-body">
 		<ul class="list-group">
-		  <li class="list-group-item port-item{{port.active === true ? ' active' : ''}}" ng-repeat="port in ports">
+		  <li class="list-group-item port-item{{port.active === true ? ' active' : ''}}" data-ng-repeat="port in ports">
 			{{port.name}}
-			<button class="btn btn-success btn-sm pull-right" ng-style="{'display': (port.hidden === false ? 'block' : 'none')}" ng-click="connect(port)">connect</button>
-			<button class="btn btn-danger btn-sm pull-right" ng-style="{'display': (port.active === true ? 'block' : 'none')}" ng-click="disconnect(port)">disconnect</button>
+			<button class="btn btn-success btn-sm pull-right" data-ng-style="{'display': (port.hidden === false ? 'block' : 'none')}" data-ng-click="connect(port)">connect</button>
+			<button class="btn btn-danger btn-sm pull-right" data-ng-style="{'display': (port.active === true ? 'block' : 'none')}" data-ng-click="disconnect(port)">disconnect</button>
 		  </li>
 		</ul>
 	  </div>
