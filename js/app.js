@@ -10,6 +10,8 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	var logArea = document.getElementById("log-area");
 
 	$scope.closeApp = function() {
+		// Attempt to disconnect safely before closing
+		$scope.disconnect(null);
 		window.close();
 	};
 
@@ -62,13 +64,16 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 			sendTimeout: 1000
 		}, function(info) {
 			$scope.$apply(function() {
+				if (info === undefined) {
+					$scope.log = "Error connecting";
+					return;
+				}
 				$scope.connectionId = info.connectionId;
+				$scope.log = "Connected to " + $scope.portName + "\n\n";
+				port.active = true;
+				hideConnectBtns();
 			});
 		});
-		$scope.log = "Connected to " + $scope.portName + "\n\n";
-
-		port.active = true;
-		hideConnectBtns();
 
 		// Start reading data from port
 		chrome.serial.onReceive.addListener(readPort);

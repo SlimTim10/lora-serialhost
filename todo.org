@@ -4,5 +4,6 @@
   CLOSED: [2015-09-21 Mon 10:31]
 * DONE Move disconnect button to replace connect button
   CLOSED: [2015-09-21 Mon 10:31]
-* TODO Connect/disconnect error handling
+* DONE Connect/disconnect error handling
+  CLOSED: [2015-09-21 Mon 11:21]
 * TODO Show commands after connecting (do not read automatically)
