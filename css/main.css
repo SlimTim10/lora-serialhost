@@ -13,3 +13,7 @@ h3#ports-header {
 li.port-item {
 	padding-bottom: 20px;
 }
+
+textarea.form-control[readonly] {
+	background-color: #fff;
+}

@@ -18,12 +18,27 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 			$scope.$apply(function() {
 				$scope.ports = [];
 				for (var i = 0; i < devices.length; i++) {
-					$scope.ports.push(devices[i].path);
+					$scope.ports.push({
+						id: i,
+						name: devices[i].path,
+						active: false,
+						hidden: false
+					});
 				}
 			});
 		});
 	};
 	$scope.refreshPorts();
+
+	var visibleConnectBtns = function() {
+		$scope.ports.forEach(function(item, index) {
+			if (item.active === true) {
+				$scope.ports[index].hidden = false;
+			} else {
+				$scope.ports[index].hidden = true;
+			}
+		});
+	};
 
 	var readPort = function(info) {
 		$scope.$apply(function() {
@@ -34,8 +49,8 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 
 	$scope.connect = function(port) {
 		chrome.serial.onReceive.removeListener(readPort);
-		$scope.usePort = port;
-		chrome.serial.connect(port, {
+		$scope.portName = port.name;
+		chrome.serial.connect($scope.portName, {
 			bitrate: 9600,
 			receiveTimeout: 5000,
 			sendTimeout: 1000
@@ -44,11 +59,15 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 				$scope.connectionId = info.connectionId;
 			});
 		});
-		$scope.log = "Connected to " + $scope.usePort + "\n\n";
+		$scope.log = "Connected to " + $scope.portName + "\n\n";
 		$scope.disconnectStyle = {
 			"display": "block"
 		};
 
+		port.active = true;
+		visibleConnectBtns();
+
+		// Start reading data from port
 		chrome.serial.onReceive.addListener(readPort);
 	};
 
