@@ -6,12 +6,20 @@ body {
 	padding: 10px 10px 10px 10px;
 }
 
+#header {
+	padding-bottom: 20px;
+}
+
 h3#ports-header {
 	padding-top: 5px;
 }
 
 li.port-item {
 	padding-bottom: 20px;
+}
+
+textarea.form-control {
+	height: 650px;
 }
 
 textarea.form-control[readonly] {

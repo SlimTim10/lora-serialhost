@@ -10,8 +10,6 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	var logArea = document.getElementById("log-area");
 
 	$scope.closeApp = function() {
-		// Attempt to disconnect safely before closing
-		$scope.disconnect(null);
 		window.close();
 	};
 
