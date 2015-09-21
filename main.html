@@ -2,9 +2,11 @@
 <html data-ng-app="loraserialhostApp">
   <head>
 	<title>LoRa Serial Host</title>
-	<link rel="stylesheet" media="all" href="css/bootstrap.css">
+	<link rel="stylesheet" media="all" href="css/bootstrap-3.3.5.css">
 	<link rel="stylesheet" media="all" href="css/main.css">
-	<script src="js/angular.min.js"></script>
+	<script src="js/jquery-2.1.4.min.js"></script>
+	<script src="js/bootstrap-3.3.5.min.js"></script>
+	<script src="js/angular-1.4.4.min.js"></script>
 	<script src="js/app.js"></script>
   </head>
   <body data-ng-controller="MainCtrl">
@@ -32,13 +34,19 @@
 		  </div>
 		  <div class="panel panel-default">
 			<div class="panel-heading clearfix">
-			  <h3 class="panel-title pull-left" id="ports-header">Commands</h3>
+			  <h3 class="panel-title pull-left">Commands</h3>
 			</div>
-			<div class="btn-group">
-			  <button class="btn btn-default">Read</button>
-			  <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				<span class="caret"></span>
-			  </button>
+			<div class="panel-body">
+			  <div class="btn-group">
+				<button class="btn btn-default">Read</button>
+				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				  <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+				  <li><a href="#">Action</a></li>
+				  <li><a href="#">Another action</a></li>
+				</ul>
+			  </div>
 			</div>
 		  </div>
 		</div>
