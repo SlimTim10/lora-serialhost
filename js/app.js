@@ -3,9 +3,6 @@ var loraserialhostApp = angular.module("loraserialhostApp", []);
 loraserialhostApp.controller("MainCtrl", function($scope) {
 	$scope.title = "LoRa Serial Host";
 	$scope.log = "";
-	$scope.disconnectStyle = {
-		"display": "none"
-	};
 	var decoder = new TextDecoder();
 	var logArea = document.getElementById("log-area");
 
@@ -54,7 +51,6 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	};
 
 	$scope.connect = function(port) {
-		chrome.serial.onReceive.removeListener(readPort);
 		$scope.portName = port.name;
 		chrome.serial.connect($scope.portName, {
 			bitrate: 9600,
@@ -69,12 +65,21 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 				$scope.connectionId = info.connectionId;
 				$scope.log = "Connected to " + $scope.portName + "\n\n";
 				port.active = true;
+				$scope.isConnected = true;
 				hideConnectBtns();
 			});
 		});
+	};
 
-		// Start reading data from port
-		chrome.serial.onReceive.addListener(readPort);
+	$scope.readContinuous = function() {
+		chrome.serial.onReceive.removeListener(readPort);
+		if ($scope.isConnected === true) {
+			chrome.serial.onReceive.addListener(readPort);
+		}
+	};
+
+	$scope.readStop = function() {
+		chrome.serial.onReceive.removeListener(readPort);
 	};
 
 	$scope.disconnect = function(port) {
@@ -83,6 +88,7 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 				if (result === true) {
 					$scope.log += "\nDisconnected";
 					port.active = false;
+					$scope.isConnected = false;
 					showConnectBtns();
 				} else {
 					$scope.log += "Error disconnecting";

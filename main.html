@@ -38,15 +38,16 @@
 			</div>
 			<div class="panel-body">
 			  <div class="btn-group">
-				<button class="btn btn-default">Read</button>
+				<button class="btn btn-default" data-ng-click="readContinuous()">Read</button>
 				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 				  <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-				  <li><a href="#">Action</a></li>
-				  <li><a href="#">Another action</a></li>
+				  <li><a href="#">1 line</a></li>
+				  <li><a href="#">10 lines</a></li>
 				</ul>
 			  </div>
+			  <button class="btn btn-danger pull-right" data-ng-click="readStop()">Stop</button>
 			</div>
 		  </div>
 		</div>
