@@ -18,24 +18,45 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 			$scope.$apply(function() {
 				$scope.ports = [];
 				for (var i = 0; i < devices.length; i++) {
-					$scope.ports.push(devices[i].path);
+					$scope.ports.push({
+						id: i,
+						name: devices[i].path,
+						active: false,
+						hidden: false
+					});
 				}
 			});
 		});
 	};
 	$scope.refreshPorts();
 
+	var hideConnectBtns = function() {
+		$scope.ports.forEach(function(item, index) {
+			$scope.ports[index].hidden = true;
+		});
+	};
+
+	var showConnectBtns = function() {
+		$scope.ports.forEach(function(item, index) {
+			$scope.ports[index].hidden = false;
+		});
+	};
+
+	var scrollLog = function() {
+		logArea.scrollTop = logArea.scrollHeight;
+	};
+
 	var readPort = function(info) {
 		$scope.$apply(function() {
 			$scope.log += decoder.decode(info.data);
-			logArea.scrollTop = logArea.scrollHeight;
+			scrollLog();
 		});
 	};
 
 	$scope.connect = function(port) {
 		chrome.serial.onReceive.removeListener(readPort);
-		$scope.usePort = port;
-		chrome.serial.connect(port, {
+		$scope.portName = port.name;
+		chrome.serial.connect($scope.portName, {
 			bitrate: 9600,
 			receiveTimeout: 5000,
 			sendTimeout: 1000
@@ -44,25 +65,26 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 				$scope.connectionId = info.connectionId;
 			});
 		});
-		$scope.log = "Connected to " + $scope.usePort + "\n\n";
-		$scope.disconnectStyle = {
-			"display": "block"
-		};
+		$scope.log = "Connected to " + $scope.portName + "\n\n";
 
+		port.active = true;
+		hideConnectBtns();
+
+		// Start reading data from port
 		chrome.serial.onReceive.addListener(readPort);
 	};
 
-	$scope.disconnect = function() {
+	$scope.disconnect = function(port) {
 		chrome.serial.disconnect($scope.connectionId, function(result) {
 			$scope.$apply(function() {
 				if (result === true) {
 					$scope.log += "\nDisconnected";
-					$scope.disconnectStyle = {
-						"display": "none"
-					};
+					port.active = false;
+					showConnectBtns();
 				} else {
 					$scope.log += "Error disconnecting";
 				}
+				scrollLog();
 			});
 		});
 	};

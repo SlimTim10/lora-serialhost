@@ -1,5 +1,8 @@
 * DONE Make log box scroll
   CLOSED: [2015-09-19 Sat 20:58]
-* TODO Highlight active port
-* TODO Move disconnect button to replace connect button
+* DONE Highlight active port
+  CLOSED: [2015-09-21 Mon 10:31]
+* DONE Move disconnect button to replace connect button
+  CLOSED: [2015-09-21 Mon 10:31]
+* TODO Connect/disconnect error handling
 * TODO Show commands after connecting (do not read automatically)

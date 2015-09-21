@@ -17,14 +17,14 @@
 	  </div>
 	  <div class="panel-body">
 		<ul class="list-group">
-		  <li class="list-group-item port-item" ng-repeat="port in ports">
-			{{port}}
-			<button class="btn btn-success btn-sm pull-right" ng-click="connect(port)">connect</button>
+		  <li class="list-group-item port-item{{port.active === true ? ' active' : ''}}" ng-repeat="port in ports">
+			{{port.name}}
+			<button class="btn btn-success btn-sm pull-right" ng-style="{'display': (port.hidden === false ? 'block' : 'none')}" ng-click="connect(port)">connect</button>
+			<button class="btn btn-danger btn-sm pull-right" ng-style="{'display': (port.active === true ? 'block' : 'none')}" ng-click="disconnect(port)">disconnect</button>
 		  </li>
 		</ul>
 	  </div>
 	</div>
-	<button class="btn btn-danger btn-sm" ng-style="disconnectStyle" ng-click="disconnect()">disconnect</button>
 	<textarea class="form-control" id="log-area" rows="20" readonly>{{log}}</textarea>
   </body>
 </html>
