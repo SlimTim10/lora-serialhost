@@ -2,9 +2,16 @@ var loraserialhostApp = angular.module("loraserialhostApp", []);
 
 loraserialhostApp.controller("MainCtrl", function($scope) {
 	$scope.title = "LoRa Serial Host";
+	$scope.data = "";
 	$scope.log = "";
+	$scope.isConnected = false;
 	var decoder = new TextDecoder();
 	var logArea = document.getElementById("log-area");
+
+	// Automatic scrolling in log area
+	$scope.$watch("log", function() {
+		logArea.scrollTop = logArea.scrollHeight;
+	});
 
 	$scope.closeApp = function() {
 		window.close();
@@ -39,17 +46,6 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		});
 	};
 
-	var scrollLog = function() {
-		logArea.scrollTop = logArea.scrollHeight;
-	};
-
-	var readPort = function(info) {
-		$scope.$apply(function() {
-			$scope.log += decoder.decode(info.data);
-			scrollLog();
-		});
-	};
-
 	$scope.connect = function(port) {
 		$scope.portName = port.name;
 		chrome.serial.connect($scope.portName, {
@@ -71,10 +67,35 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		});
 	};
 
+	var readPort = function(info) {
+		$scope.$apply(function() {
+			$scope.log += decoder.decode(info.data);
+		});
+	};
+
 	$scope.readContinuous = function() {
 		chrome.serial.onReceive.removeListener(readPort);
 		if ($scope.isConnected === true) {
 			chrome.serial.onReceive.addListener(readPort);
+		}
+	};
+
+	var readPortLines = function(info) {
+		$scope.$apply(function() {
+			$scope.data += decoder.decode(info.data);
+			if ($scope.data.split("\n").length >= $scope.nlines) {
+				chrome.serial.onReceive.removeListener(readPortLines);
+				$scope.log += $scope.data;
+			}
+		});
+	};
+
+	$scope.readLines = function(nlines) {
+		$scope.nlines = nlines;
+		$scope.data = "";
+		chrome.serial.onReceive.removeListener(readPortLines);
+		if ($scope.isConnected === true) {
+			chrome.serial.onReceive.addListener(readPortLines);
 		}
 	};
 
@@ -93,7 +114,6 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 				} else {
 					$scope.log += "Error disconnecting";
 				}
-				scrollLog();
 			});
 		});
 	};
