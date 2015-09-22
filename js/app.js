@@ -86,24 +86,24 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		});
 	};
 
-	var readPort = function(info) {
+	var portReadContinuous = function(info) {
 		$scope.$apply(function() {
 			$scope.log += decoder.decode(info.data);
 		});
 	};
 
 	$scope.readContinuous = function() {
-		chrome.serial.onReceive.removeListener(readPort);
+		chrome.serial.onReceive.removeListener(portReadContinuous);
 		if ($scope.isConnected === true) {
-			chrome.serial.onReceive.addListener(readPort);
+			chrome.serial.onReceive.addListener(portReadContinuous);
 		}
 	};
 
-	var readPortLines = function(info) {
+	var portReadLines = function(info) {
 		$scope.$apply(function() {
 			$scope.data += decoder.decode(info.data);
 			if ($scope.data.split("\n").length >= $scope.nlines) {
-				chrome.serial.onReceive.removeListener(readPortLines);
+				chrome.serial.onReceive.removeListener(portReadLines);
 				$scope.log += $scope.data;
 			}
 		});
@@ -112,14 +112,14 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	$scope.readLines = function(nlines) {
 		$scope.nlines = nlines;
 		$scope.data = "";
-		chrome.serial.onReceive.removeListener(readPortLines);
+		chrome.serial.onReceive.removeListener(portReadLines);
 		if ($scope.isConnected === true) {
-			chrome.serial.onReceive.addListener(readPortLines);
+			chrome.serial.onReceive.addListener(portReadLines);
 		}
 	};
 
 	$scope.readStop = function() {
-		chrome.serial.onReceive.removeListener(readPort);
+		chrome.serial.onReceive.removeListener(portReadContinuous);
 	};
 
 	$scope.disconnect = function(port) {
