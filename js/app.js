@@ -2,12 +2,16 @@ var loraserialhostApp = angular.module("loraserialhostApp", []);
 
 loraserialhostApp.controller("MainCtrl", function($scope) {
 	$scope.title = "LoRa Serial Host";
+	$scope.data = "";
 	$scope.log = "";
-	$scope.disconnectStyle = {
-		"display": "none"
-	};
+	$scope.isConnected = false;
 	var decoder = new TextDecoder();
 	var logArea = document.getElementById("log-area");
+
+	// Automatic scrolling in log area
+	$scope.$watch("log", function() {
+		logArea.scrollTop = logArea.scrollHeight;
+	});
 
 	$scope.closeApp = function() {
 		window.close();
@@ -42,19 +46,7 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		});
 	};
 
-	var scrollLog = function() {
-		logArea.scrollTop = logArea.scrollHeight;
-	};
-
-	var readPort = function(info) {
-		$scope.$apply(function() {
-			$scope.log += decoder.decode(info.data);
-			scrollLog();
-		});
-	};
-
 	$scope.connect = function(port) {
-		chrome.serial.onReceive.removeListener(readPort);
 		$scope.portName = port.name;
 		chrome.serial.connect($scope.portName, {
 			bitrate: 9600,
@@ -69,12 +61,46 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 				$scope.connectionId = info.connectionId;
 				$scope.log = "Connected to " + $scope.portName + "\n\n";
 				port.active = true;
+				$scope.isConnected = true;
 				hideConnectBtns();
 			});
 		});
+	};
 
-		// Start reading data from port
-		chrome.serial.onReceive.addListener(readPort);
+	var readPort = function(info) {
+		$scope.$apply(function() {
+			$scope.log += decoder.decode(info.data);
+		});
+	};
+
+	$scope.readContinuous = function() {
+		chrome.serial.onReceive.removeListener(readPort);
+		if ($scope.isConnected === true) {
+			chrome.serial.onReceive.addListener(readPort);
+		}
+	};
+
+	var readPortLines = function(info) {
+		$scope.$apply(function() {
+			$scope.data += decoder.decode(info.data);
+			if ($scope.data.split("\n").length >= $scope.nlines) {
+				chrome.serial.onReceive.removeListener(readPortLines);
+				$scope.log += $scope.data;
+			}
+		});
+	};
+
+	$scope.readLines = function(nlines) {
+		$scope.nlines = nlines;
+		$scope.data = "";
+		chrome.serial.onReceive.removeListener(readPortLines);
+		if ($scope.isConnected === true) {
+			chrome.serial.onReceive.addListener(readPortLines);
+		}
+	};
+
+	$scope.readStop = function() {
+		chrome.serial.onReceive.removeListener(readPort);
 	};
 
 	$scope.disconnect = function(port) {
@@ -83,11 +109,11 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 				if (result === true) {
 					$scope.log += "\nDisconnected";
 					port.active = false;
+					$scope.isConnected = false;
 					showConnectBtns();
 				} else {
 					$scope.log += "Error disconnecting";
 				}
-				scrollLog();
 			});
 		});
 	};
