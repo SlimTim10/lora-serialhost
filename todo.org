@@ -6,4 +6,7 @@
   CLOSED: [2015-09-21 Mon 10:31]
 * DONE Connect/disconnect error handling
   CLOSED: [2015-09-21 Mon 11:21]
-* TODO Show commands after connecting (do not read automatically)
+* DONE Show commands after connecting (do not read automatically)
+  CLOSED: [2015-09-21 Mon 20:24]
+* DONE Disconnect open connections on app close
+  CLOSED: [2015-09-21 Mon 21:25]

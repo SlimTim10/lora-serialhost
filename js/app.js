@@ -14,7 +14,26 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	});
 
 	$scope.closeApp = function() {
-		window.close();
+		// Disconnect all open connections before closing
+		chrome.serial.getConnections(function(infoArray) {
+			$scope.$apply(function() {
+				$scope.log = "";
+				var safeExit = true;
+				for (var i = 0; i < infoArray.length; i++) {
+					chrome.serial.disconnect(infoArray[i].connectionId, function(result) {
+						$scope.$apply(function() {
+							if (result === false) {
+								$scope.log += "Error disconnecting from ID " + info.connectionId;
+								safeExit = false;
+							}
+						});
+					});
+				}
+				if (safeExit === true) {
+					window.close();
+				}
+			});
+		});
 	};
 
 	$scope.refreshPorts = function() {
