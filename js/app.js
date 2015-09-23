@@ -1,13 +1,22 @@
 var loraserialhostApp = angular.module("loraserialhostApp", []);
 
 loraserialhostApp.controller("MainCtrl", function($scope) {
-	$scope.title = "LoRa Serial Host";
-	$scope.data = "";
-	$scope.log = "";
-	$scope.isConnected = false;
 	var decoder = new TextDecoder();
 	var encoder = new TextEncoder();
 	var logArea = document.getElementById("log-area");
+
+	var init = function() {
+		$scope.title = "LoRa Serial Host";
+		$scope.data = "";
+		$scope.log = "";
+		$scope.isConnected = false;
+
+		$scope.readBtn = {
+			text: "Read",
+			styleClass: "btn-default",
+			func: $scope.readContinuous
+		};
+	};
 
 	// Automatic scrolling in log area
 	$scope.$watch("log", function() {
@@ -97,6 +106,9 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		chrome.serial.onReceive.removeListener(portReadContinuous);
 		if ($scope.isConnected === true) {
 			chrome.serial.onReceive.addListener(portReadContinuous);
+			$scope.readBtn.text = "Stop";
+			$scope.readBtn.styleClass = "btn-danger";
+			$scope.readBtn.func = $scope.readStop;
 		}
 	};
 
@@ -121,6 +133,9 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 
 	$scope.readStop = function() {
 		chrome.serial.onReceive.removeListener(portReadContinuous);
+		$scope.readBtn.text = "Read";
+		$scope.readBtn.styleClass = "btn-default";
+		$scope.readBtn.func = $scope.readContinuous;
 	};
 
 	$scope.sendMsg = function(msg) {
@@ -149,4 +164,6 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 			});
 		});
 	};
+
+	init();
 });

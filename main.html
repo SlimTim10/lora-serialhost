@@ -38,8 +38,8 @@
 			</div>
 			<div class="panel-body">
 			  <div class="btn-group command-item">
-				<button class="btn btn-default" data-ng-click="readContinuous()">Read</button>
-				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+				<button class="btn {{readBtn.styleClass}}" data-ng-click="readBtn.func()">{{readBtn.text}}</button>
+				<button class="btn btn-default dropdown-toggle" data-toggle="dropdown" data-ng-style="{'display': (readBtn.text === 'Read' ? 'block' : 'none')}">
 				  <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
@@ -47,7 +47,6 @@
 				  <li><a href="#" data-ng-click="readLines(10)">10 lines</a></li>
 				</ul>
 			  </div>
-			  <button class="btn btn-danger pull-right" data-ng-click="readStop()">Stop</button>
 			  <div class="input-group">
 				<span class="input-group-btn">
 				  <button class="btn btn-default" data-ng-click="sendMsg(send.text)">Send</button>
