@@ -25,3 +25,7 @@ textarea.form-control {
 textarea.form-control[readonly] {
 	background-color: #fff;
 }
+
+.command-item {
+	padding-bottom: 10px;
+}

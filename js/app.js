@@ -6,6 +6,7 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	$scope.log = "";
 	$scope.isConnected = false;
 	var decoder = new TextDecoder();
+	var encoder = new TextEncoder();
 	var logArea = document.getElementById("log-area");
 
 	// Automatic scrolling in log area
@@ -120,6 +121,18 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 
 	$scope.readStop = function() {
 		chrome.serial.onReceive.removeListener(portReadContinuous);
+	};
+
+	$scope.sendMsg = function(msg) {
+		if ($scope.isConnected === true) {
+			msg += "\n";
+			var data = encoder.encode(msg).buffer;
+			chrome.serial.send($scope.connectionId, data, function(info) {
+				$scope.$apply(function() {
+					$scope.log += info.bytesSent + " bytes sent\n";
+				});
+			});
+		}
 	};
 
 	$scope.disconnect = function(port) {
