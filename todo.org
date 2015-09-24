@@ -10,3 +10,4 @@
   CLOSED: [2015-09-21 Mon 20:24]
 * DONE Disconnect open connections on app close
   CLOSED: [2015-09-21 Mon 21:25]
+* TODO Add options panel with baud rate input
