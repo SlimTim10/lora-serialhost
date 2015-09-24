@@ -16,6 +16,10 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 			styleClass: "btn-default",
 			func: $scope.readContinuous
 		};
+
+		$scope.options = {
+			baud: "9600"
+		};
 	};
 
 	// Automatic scrolling in log area
@@ -78,7 +82,7 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 	$scope.connect = function(port) {
 		$scope.portName = port.name;
 		chrome.serial.connect($scope.portName, {
-			bitrate: 9600,
+			bitrate: parseInt($scope.options.baud, 10),
 			receiveTimeout: 5000,
 			sendTimeout: 1000
 		}, function(info) {
