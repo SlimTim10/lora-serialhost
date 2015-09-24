@@ -29,3 +29,7 @@ textarea.form-control[readonly] {
 .command-item {
 	padding-bottom: 10px;
 }
+
+.option-item {
+	padding-bottom: 10px;
+}

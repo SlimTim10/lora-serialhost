@@ -18,7 +18,9 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		};
 
 		$scope.options = {
-			baud: "9600"
+			baud: "9600",
+			receiveTimeout: "5000",
+			sendTimeout: "1000"
 		};
 	};
 
@@ -83,8 +85,8 @@ loraserialhostApp.controller("MainCtrl", function($scope) {
 		$scope.portName = port.name;
 		chrome.serial.connect($scope.portName, {
 			bitrate: parseInt($scope.options.baud, 10),
-			receiveTimeout: 5000,
-			sendTimeout: 1000
+			receiveTimeout: parseInt($scope.options.receiveTimeout, 10),
+			sendTimeout: parseInt($scope.options.sendTimeout, 10),
 		}, function(info) {
 			$scope.$apply(function() {
 				if (info === undefined) {

@@ -22,9 +22,19 @@
 			  <h3 class="panel-title pull-left">Options</h3>
 			</div>
 			<div class="panel-body">
-			  <div class="input-group">
+			  <div class="input-group option-item">
 				<span class="input-group-addon">Baud rate</span>
 				<input class="form-control" type="text" placeholder="9600" data-ng-model="options.baud">
+			  </div>
+			  <div class="input-group option-item">
+				<span class="input-group-addon">Receive timeout</span>
+				<input class="form-control" type="text" placeholder="5000" data-ng-model="options.receiveTimeout">
+				<span class="input-group-addon">ms</span>
+			  </div>
+			  <div class="input-group option-item">
+				<span class="input-group-addon">Send timeout</span>
+				<input class="form-control" type="text" placeholder="1000" data-ng-model="options.sendTimeout">
+				<span class="input-group-addon">ms</span>
 			  </div>
 			</div>
 		  </div>
