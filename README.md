@@ -1,3 +1,5 @@
 # LoRa Serial Host
 
-Communicate with LoRa device over serial port.
+Chrome app to be used with LoRa client device to communicate over serial port.
+
+[Launching the app](https://developer.chrome.com/apps/first_app#five)
